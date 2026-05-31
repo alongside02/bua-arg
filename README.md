@@ -1,5 +1,15 @@
-# BUA ARG
+# 北农路7号异常档案
 
-Static website for a Beijing University of Agriculture campus ARG prototype.
+北京农学院校内网页解谜 / 模拟恐怖 ARG。
 
-Open `index.html` locally, or publish this folder as a GitHub Pages site.
+作品采用官网拟态首页作为入口，把线索埋入页脚编号、HTML 源码、账号检索、旧站缓存、现实校园点位和组合口令中。玩家需要按层推进，而不是顺序点击菜单：
+
+1. 页脚异常
+2. 源码批注
+3. 重复会话
+4. 旧站字段
+5. 实景路线
+6. 第零年
+7. 归档结局
+
+发布地址：https://alongside02.github.io/bua-arg/
