@@ -386,10 +386,10 @@
       cursor: not-allowed;
     }
     .archive-menu button.locked::after {
-      content: "  LOCKED";
+      content: "  待核验";
       float: right;
-      color: #9b1b1b;
-      font: 700 10px/1.6 Consolas, "Courier New", monospace;
+      color: #7b5b20;
+      font: 700 10px/1.6 "Microsoft YaHei", sans-serif;
     }
     .archive-doc {
       min-height: 380px;
@@ -493,6 +493,49 @@
       color: #fff;
       padding: 0 14px;
       cursor: pointer;
+    }
+    .ghost-input {
+      letter-spacing: .08em;
+      text-transform: none;
+    }
+    .popup {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 80;
+      width: min(420px, calc(100vw - 40px));
+      display: none;
+      border: 1px solid #7f8b84;
+      background: #f5f7f4;
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+      font-size: 14px;
+    }
+    .popup.show { display: block; animation: popupIn .18s ease-out; }
+    .popup-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: #123720;
+      color: #fff;
+      font-size: 13px;
+    }
+    .popup-body {
+      padding: 14px;
+      color: #1d2a24;
+      line-height: 1.75;
+      word-break: break-all;
+    }
+    .popup-close {
+      border: 0;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    @keyframes popupIn {
+      from { transform: translateY(14px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
     .safe-btn {
       display: inline-flex;
@@ -851,11 +894,13 @@
         <div class="archive-menu" id="archiveMenu">
           <button class="active" data-doc="notice">专题说明</button>
           <button data-doc="history">校史沿革核验</button>
-          <button data-doc="source">源码批注</button>
+          <button data-doc="source">旧站批注</button>
           <button data-doc="map">校园地图</button>
           <button data-doc="search">检索说明</button>
           <button data-doc="reviewer">审核记录</button>
           <button data-doc="oldsite">旧站缓存</button>
+          <button data-doc="advert">广告投放</button>
+          <button data-doc="registry">索引校验</button>
           <button data-doc="duty">零点值班表</button>
           <button data-doc="realmap">实景导航</button>
           <button data-doc="street">牌匾识别</button>
@@ -870,16 +915,24 @@
     <img src="assets/archive-face.png" alt="">
   </div>
 
-  <!-- ARG-LAYER-2: account=ldz_2024_nljg; source clues are part of the game, not a bug. -->
+  <div class="popup" id="systemPopup" aria-hidden="true">
+    <div class="popup-title">
+      <span id="popupTitle">网页消息</span>
+      <button class="popup-close" id="popupClose" aria-label="关闭">×</button>
+    </div>
+    <div class="popup-body" id="popupBody"></div>
+  </div>
+
+  <!-- ARG-LAYER-2: account=ldz_2024_nljg; sync-node=screen-071; checksum=08/07 -->
   <script>
     const docs = {
       notice: `
         <h3>专题说明</h3>
-        <p>本专题站用于北京农学院建校七十周年相关资料的整理、展示与内部核验。当前页面只开放第一层。</p>
-        <p>不要急着点菜单。先确认页面底部编号、专题年份和“未归档栏目”三者是否相容。</p>
-        <div class="stain">系统提示：检测到未归档栏目 1 项。公开页数 70，实际索引 71。请提交异常编号。</div>
+        <p>本专题站用于北京农学院建校七十周年相关资料的整理、展示与内部核验。部分旧站资料仍在同步。</p>
+        <p>请核对页面底部编号、专题年份和“未归档栏目”三者是否相容。若出现索引差异，请按档案编号登记。</p>
+        <div class="stain">同步提示：检测到未归档栏目 1 项。公开页数 70，实际索引 71。请登记异常编号。</div>
         <div class="code-row">
-          <input id="noticeCode" placeholder="输入异常页码，例如 00/00">
+          <input id="noticeCode" placeholder="异常编号">
           <button class="danger-btn" data-action="submitNotice">核验页码</button>
         </div>
         <p id="noticeHint" class="glitch"></p>
@@ -892,19 +945,19 @@
           <li>1978：经批准更名为北京农学院。</li>
           <li>2026：建校七十周年专题资料站试运行。</li>
         </ul>
-        <p>请核对以上年份。若发现“第零年”记录，请勿删除。第一层通过后，源码会出现下一名审核员的账号。</p>
+        <p>请核对以上年份。若发现“第零年”记录，请暂存，等待旧站批注同步。</p>
       `,
       source: `
-        <h3>源码批注</h3>
-        <p>经典网页谜题不会把答案只放在页面正文里。请查看本页 HTML 源码，寻找 <strong>ARG-LAYER-2</strong> 批注。</p>
+        <h3>旧站批注</h3>
+        <p>旧版模板迁移时保留了若干维护批注。页面正文中不会显示这些字段，浏览器的页面源文件中可查到同步层记录。</p>
         <div class="corrupt-card">
-          <h4>线索格式</h4>
+          <h4>批注字段</h4>
           <p>account = ?</p>
-          <p>账号不是名字。它是下一层搜索关键词，也是重复会话的钥匙。</p>
+          <p>账号用于交叉核对登录记录，不等同于姓名。</p>
         </div>
         <div class="code-row">
-          <input id="sourceCode" placeholder="输入源码里的 account">
-          <button class="danger-btn" data-action="submitSource">提交账号</button>
+          <input id="sourceCode" class="ghost-input" placeholder="account">
+          <button class="danger-btn" data-action="submitSource">核对账号</button>
         </div>
         <p id="sourceHint" class="glitch"></p>
       `,
@@ -930,7 +983,7 @@
           <li>博学尚农</li>
           <li>北农路7号</li>
         </ul>
-        <p>禁止访问词条不会出现在公开搜索建议中。若页面提示“重复会话”，请优先检索账号对应姓名。</p>
+        <p>部分词条暂不出现在公开搜索建议中。若出现“重复会话”，请优先核验账号。</p>
         <div class="system-strip">suggestion_cache: 李东泽 / 农林经济管理 / 00号楼 / 202605300000</div>
       `,
       reviewer: `
@@ -951,7 +1004,7 @@
           [00:00:02] current viewer: <b>not Li Dongze</b><br>
           [00:00:03] waiting for manual confirmation...
         </div>
-        <p class="glitch">请不要在公开搜索框继续输入他的名字。请不要恢复他的会话。</p>
+        <p class="glitch">公开检索暂停。该账号存在重复会话。</p>
         <p>重复会话编号由“登录记录数/账号数”组成。</p>
         <div class="code-row">
           <input id="reviewCode" placeholder="输入重复会话编号">
@@ -977,6 +1030,41 @@
           <button class="danger-btn" data-action="submitCache">写入缓存字段</button>
         </div>
         <p id="cacheHint" class="glitch"></p>
+      `,
+      advert: `
+        <h3>电视墙广告投放记录</h3>
+        <p>2026 年校庆专题站接入了校园电视墙轮播素材。旧站缓存显示，其中一条公益广告没有通过审核，但投放记录仍被推送到 00:00 的屏幕组。</p>
+        <div class="corrupt-card">
+          <h4>screen-071 / 素材预览</h4>
+          <p>七十周年专题　北农路7号记忆征集</p>
+          <p>请在礼堂、经管楼、图书馆、生资楼四处查看屏幕下方小字。</p>
+          <p>广告口播稿：</p>
+          <p>“<strong>净</strong>化屏幕内容，<strong>屏</strong>蔽旧站异常，<strong>计</strong>入校庆资料，<strong>划</strong>归学生协助审核。”</p>
+        </div>
+        <div class="system-strip">window.alert: 鈴木メモリ 𓂀 鍖楀啘璺?鍙? 071 screen group accepted</div>
+        <p>投放名称由四个加粗字组成。</p>
+        <div class="code-row">
+          <input id="advertCode" placeholder="输入投放名称">
+          <button class="danger-btn" data-action="submitAdvert">确认投放</button>
+        </div>
+        <p id="advertHint" class="glitch"></p>
+      `,
+      registry: `
+        <h3>关键词索引校验</h3>
+        <p>广告投放名称写入后，旧站生成了一张关键词索引。索引表采用“栏目首字 + 审核年份后两位 + 屏幕组编号”的格式。</p>
+        <div class="corrupt-card">
+          <h4>keywords.html</h4>
+          <p>栏目：农林经济管理</p>
+          <p>审核年份：2024</p>
+          <p>屏幕组：071</p>
+          <p>索引格式：栏目首字拼音小写 + 年份后两位 + 屏幕组三位</p>
+        </div>
+        <p>索引值用于打开零点值班表。</p>
+        <div class="code-row">
+          <input id="registryCode" class="ghost-input" placeholder="keyword">
+          <button class="danger-btn" data-action="submitRegistry">校验索引</button>
+        </div>
+        <p id="registryHint" class="glitch"></p>
       `,
       duty: `
         <h3>零点值班表</h3>
@@ -1022,7 +1110,7 @@
           <h4>路线字串</h4>
           <p>时间顺序：礼 / 经 / 图 / 生</p>
           <p>返回顺序：<span class="redacted">生图经礼</span></p>
-          <p>异常提示：不要从正门进入。正门只会带你回到首页。</p>
+          <p>异常提示：正门方向记录缺失，仅保留返回路线。</p>
         </div>
         <div class="code-row">
           <input id="routeCode" placeholder="输入实景口令">
@@ -1033,7 +1121,7 @@
       zero: `
         <h3 class="glitch">第零年</h3>
         <p>此页面不属于建校七十周年专题资料站。</p>
-        <p>如果你能看到这段文字，说明你正在使用审核权限。请回答：为什么第七十一页会出现在七十周年专题里？</p>
+        <p>该页由旧站缓存、电视墙投放记录与实景路线共同恢复。审核时间固定在 00:00:00。</p>
         <p>李东泽没有删除它。他只是在 00:00:00 之后，把所有栏目重新数了一遍。先数网页，再数地图。网页口令来自旧站缓存，实景口令来自返回路线。</p>
         <div class="stain">审核日志 00/70：上一位审核员选择了“保留”。下一位审核员已进入页面。</div>
         <div class="code-row">
@@ -1050,13 +1138,18 @@
     const counter = document.getElementById("counter");
     const jumpscare = document.getElementById("jumpscare");
     const progressPanel = document.getElementById("progressPanel");
+    const popup = document.getElementById("systemPopup");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupBody = document.getElementById("popupBody");
     let wrongZeroCode = 0;
     let routeSolved = false;
     const progressSteps = [
       ["notice", "页脚异常"],
-      ["source", "源码账号"],
+      ["source", "旧站批注"],
       ["reviewer", "重复会话"],
       ["oldsite", "旧站字段"],
+      ["advert", "广告投放"],
+      ["registry", "索引校验"],
       ["realmap", "实景路线"],
       ["zero", "第零年"],
       ["ending", "归档"]
@@ -1069,6 +1162,8 @@
       map: false,
       reviewer: false,
       oldsite: false,
+      advert: false,
+      registry: false,
       duty: false,
       realmap: false,
       street: false,
@@ -1095,6 +1190,18 @@
       updateLocks(nextDoc);
     }
 
+    function showPopup(title, body, ms = 5200) {
+      popupTitle.textContent = title;
+      popupBody.innerHTML = body;
+      popup.classList.add("show");
+      popup.setAttribute("aria-hidden", "false");
+      clearTimeout(showPopup.timer);
+      showPopup.timer = setTimeout(() => {
+        popup.classList.remove("show");
+        popup.setAttribute("aria-hidden", "true");
+      }, ms);
+    }
+
     function updateLocks(currentDoc = "notice") {
       menu.querySelectorAll("button[data-doc]").forEach(btn => {
         const doc = btn.dataset.doc;
@@ -1103,7 +1210,7 @@
       });
       progressPanel.innerHTML = progressSteps.map(([doc, label]) => {
         const cls = unlocked[doc] ? "done" : doc === currentDoc ? "current" : "";
-        return `<div class="progress-step ${cls}">${label}<br>${unlocked[doc] ? "已解锁" : "待解锁"}</div>`;
+        return `<div class="progress-step ${cls}">${label}<br>${unlocked[doc] ? "已同步" : "待同步"}</div>`;
       }).join("");
     }
 
@@ -1116,14 +1223,15 @@
     function setDoc(doc) {
       if (!unlocked[doc]) {
         archiveDoc.innerHTML = `
-          <h3>档案未解锁</h3>
-          <p>当前栏目需要上一层钥匙。不要跳关，系统会记录不连续访问。</p>
+          <h3>栏目同步中</h3>
+          <p>该栏目尚未完成旧站索引校验。请等待上一项资料写入后刷新。</p>
           <div class="logbox">
-            [lock] requested: ${doc}<br>
-            [lock] required: ${progressSteps.find(([step]) => !unlocked[step])?.[1] || "unknown"}<br>
-            [lock] hint: 页码 -> 源码 -> 会话 -> 缓存 -> 实景 -> 第零年
+            [sync] request=${doc}<br>
+            [sync] pending=${progressSteps.find(([step]) => !unlocked[step])?.[1] || "none"}<br>
+            [sync] last_update=waiting
           </div>
         `;
+        showPopup("专题资料站", "栏目索引尚未返回。<br>鏁版嵁姝ｅ湪杩囩珯銆傝绛夊緟上一项资料写入。", 4200);
         updateLocks(doc);
         return;
       }
@@ -1134,6 +1242,11 @@
         counter.textContent = "71/70";
       }
       if (doc === "oldsite") counter.textContent = "cache/70";
+      if (doc === "advert") {
+        counter.textContent = "ad/071";
+        setTimeout(() => showPopup("屏幕组 071", "鎶曟斁澶辫触：旧素材仍在播放。<br>“请不要看屏幕右下角。”", 6200), 700);
+      }
+      if (doc === "registry") counter.textContent = "key/071";
       if (doc === "duty") counter.textContent = "00:00/70";
       if (doc === "realmap") {
         document.body.classList.add("anomaly");
@@ -1204,6 +1317,10 @@
       overlay.classList.remove("open");
       overlay.setAttribute("aria-hidden", "true");
     });
+    document.getElementById("popupClose").addEventListener("click", () => {
+      popup.classList.remove("show");
+      popup.setAttribute("aria-hidden", "true");
+    });
     menu.addEventListener("click", event => {
       const button = event.target.closest("button[data-doc]");
       if (button) setDoc(button.dataset.doc);
@@ -1227,7 +1344,8 @@
           setDoc("source");
           counter.textContent = "source/70";
         } else if (hint) {
-          hint.textContent = "页码不连续。公开页数是 70，实际索引多了 1。";
+          hint.textContent = "公开页数与索引数不一致。";
+          showPopup("编号校验", "未找到该编号。<br>public_pages=70 / index_count=71", 3600);
         }
       }
       if (action === "submitSource") {
@@ -1240,7 +1358,8 @@
           setDoc("reviewer");
           counter.textContent = "08/07";
         } else if (hint) {
-          hint.textContent = "源码里有 account 字段，不是姓名。";
+          hint.textContent = "账号格式不符合旧站批注。";
+          showPopup("旧站批注", "account 字段未匹配。<br>ARG-LAYER-2 / checksum pending", 3800);
         }
       }
       if (action === "submitReviewer") {
@@ -1251,7 +1370,8 @@
           unlock("oldsite", "oldsite");
           setDoc("oldsite");
         } else if (hint) {
-          hint.textContent = "账号 7 个，登录记录 8 条。顺序不能反。";
+          hint.textContent = "重复会话编号未通过。";
+          showPopup("登录记录", "7 accounts / 8 sessions<br>鏁版嵁琚鍐欎竴娆°", 4200);
         }
       }
       if (action === "submitCache") {
@@ -1259,18 +1379,45 @@
         const hint = document.getElementById("cacheHint");
         const value = (input?.value || "").trim().replace(/\D/g, "");
         if (value === "202605300000") {
+          unlock("advert", "advert");
+          setDoc("advert");
+        } else if (hint) {
+          hint.textContent = "字段长度不符合旧站时间戳。";
+          showPopup("旧站缓存", "时间戳字段应为 12 位。<br>2026-05-30 00:00:00", 4200);
+        }
+      }
+      if (action === "submitAdvert") {
+        const input = document.getElementById("advertCode");
+        const hint = document.getElementById("advertHint");
+        const value = (input?.value || "").trim().replace(/\s+/g, "");
+        if (value === "净屏计划" || value === "净屏" || value.toLowerCase() === "jingpingjihua") {
+          unlock("registry", "registry");
+          setDoc("registry");
+          showPopup("屏幕组 071", "投放名称已写入。<br>keyword table generated.", 3600);
+        } else if (hint) {
+          hint.textContent = "投放名称未匹配。请检查口播稿中的加粗字。";
+          showPopup("屏幕组 071", "绱犳潗瀹℃牳鏈€氳繃。<br>粗体字段没有被完整读取。", 4400);
+        }
+      }
+      if (action === "submitRegistry") {
+        const input = document.getElementById("registryCode");
+        const hint = document.getElementById("registryHint");
+        const value = (input?.value || "").trim().toLowerCase();
+        if (value === "nljg24071") {
           unlock("duty", "duty");
           unlock("realmap", "duty");
           setDoc("duty");
         } else if (hint) {
-          hint.textContent = "字段长度不对。它来自 2026-05-30 00:00:00。";
+          hint.textContent = "关键词未写入。栏目首字拼音小写 + 年份后两位 + 屏幕组三位。";
+          showPopup("keywords.html", "expected pattern: [column][yy][screen]<br>nljg / 24 / 071", 4600);
         }
       }
       if (action === "routeWake") {
         unlock("street", "realmap");
         counter.textContent = "gps:00";
         archiveDoc.insertAdjacentHTML("beforeend", `<div class="logbox">[gps] 北农路7号 connected<br>[gps] 礼堂东北侧 connected<br>[gps] 经管楼前 connected<br>[gps] 图书馆南侧 connected<br>[gps] 生资楼东侧 connected<br>[gps] reviewer is behind the current route</div>`);
-        setTimeout(() => triggerJumpscare("street"), 850);
+        showPopup("位置服务", "正在读取校园实景缓存。<br>gps://road7/23:57/return", 2600);
+        setTimeout(() => triggerJumpscare("street"), 1200);
       }
       if (action === "submitRoute") {
         const input = document.getElementById("routeCode");
@@ -1293,33 +1440,36 @@
             <button class="danger-btn" data-doc-jump="zero">进入第零年</button>
           `;
         } else {
-          if (hint) hint.textContent = "路线错误。李东泽是倒着回来的。";
-          triggerJumpscare("street");
+          if (hint) hint.textContent = "路线校验未通过。返回路线与时间顺序相反。";
+          showPopup("实景导航", "正向路线缺少最后一帧。<br>请读取返回路线。", 4200);
         }
       }
       if (action === "submitZero") {
         const input = document.getElementById("zeroCode");
         const hint = document.getElementById("zeroHint");
         const value = (input?.value || "").trim().replace(/\s+/g, "");
-        if (value === "202605300000" || value === "202605300000-生图经礼" || value === "生图经礼" || value.toLowerCase() === "ldz_2024_nljg") {
+        if (value === "202605300000-净屏计划-nljg24071-生图经礼" || value === "202605300000-生图经礼" || value === "202605300000生图经礼") {
           unlock("ending", "ending");
           archiveDoc.innerHTML = `
             <h3 class="glitch">归档完成</h3>
-            <p>第七十一页已被保留。李东泽的审核会话已转移给当前浏览者。</p>
+            <p>第七十一页已被保留。旧站字段、电视墙投放、关键词索引与实景路线均已写入。</p>
             <div class="logbox">
               [00:00:00] old reviewer: 李东泽<br>
               [00:00:00] new reviewer: current viewer<br>
+              [00:00:00] screen group: 071<br>
+              [00:00:00] keyword: nljg24071<br>
               [00:00:00] real route: ${routeSolved ? "verified" : "accepted without route"}<br>
               [00:00:00] page count changed: 71 -> 72<br>
-              [00:00:00] do not close the official website
+              [00:00:00] archive sealed
             </div>
             <button class="danger-btn" data-action="restore">重新读取档案照片</button>
           `;
           counter.textContent = "72/70";
         } else {
           wrongZeroCode += 1;
-          if (hint) hint.textContent = wrongZeroCode >= 2 ? "字段错误。李东泽的会话正在靠近。你还没有把地图倒过来。" : "字段错误。旧站缓存里有一串 12 位数字；现实地图里有四个字。";
-          if (wrongZeroCode >= 3) triggerJumpscare("zero");
+          if (hint) hint.textContent = wrongZeroCode >= 2 ? "组合字段未通过：旧站字段与实景字段未同时出现。" : "字段未通过。";
+          showPopup("第零年", wrongZeroCode >= 3 ? "棰勮妗ｆ姝ｅ湪鎵撳紑..." : "旧站字段 + 返回路线字段。", 4600);
+          if (wrongZeroCode >= 4) triggerJumpscare("zero");
         }
       }
     });
@@ -1359,11 +1509,21 @@
         unlock("oldsite", "oldsite");
         openPanel("oldsite");
       } else if (query.includes("202605300000")) {
+        unlock("advert", "advert");
+        openPanel("advert");
+      } else if (query.includes("净屏计划")) {
+        unlock("registry", "registry");
+        openPanel("registry");
+      } else if (normalized.includes("nljg24071")) {
         unlock("duty", "duty");
         unlock("realmap", "duty");
         openPanel("duty");
       } else if (query.includes("旧站") || query.includes("缓存")) {
         openPanel("oldsite");
+      } else if (query.includes("广告") || query.includes("电视墙") || query.includes("屏幕组")) {
+        openPanel("advert");
+      } else if (query.includes("索引") || query.includes("关键词")) {
+        openPanel("registry");
       } else if (query.includes("值班") || query.includes("零点")) {
         openPanel("duty");
       } else if (query.includes("实景") || query.includes("导航") || query.includes("路线") || query.includes("地图解密")) {
