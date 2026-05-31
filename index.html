@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>北京农学院</title>
+  <style>
+    :root {
+      --green: #0b6b38;
+      --deep: #07391f;
+      --ink: #1d2a24;
+      --muted: #66746d;
+      --line: #d8e2dc;
+      --paper: #f6f8f5;
+      --danger: #ad1f1f;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fff;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .topbar {
+      background: var(--deep);
+      color: #fff;
+      font-size: 13px;
+    }
+    .wrap {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+    .topbar .wrap,
+    .header .wrap,
+    .nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-links {
+      display: flex;
+      gap: 22px;
+      min-height: 38px;
+      align-items: center;
+    }
+    .top-links span { opacity: .92; }
+
+    .header {
+      padding: 22px 0;
+      background: linear-gradient(90deg, #07572e, #0b6b38);
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+    }
+    .logo-row img {
+      width: 286px;
+      max-width: 54vw;
+      display: block;
+    }
+    .anniv {
+      padding-left: 16px;
+      border-left: 1px solid rgba(255, 255, 255, .36);
+      color: #fff;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .anniv small {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255, 255, 255, .76);
+      font-weight: 400;
+    }
+    .search {
+      display: flex;
+      width: min(330px, 38vw);
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+    }
+    .search input {
+      width: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      border: 0;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .search button {
+      border: 0;
+      min-width: 72px;
+      padding: 0 16px;
+      color: #fff;
+      background: #064624;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 3px 14px rgba(0, 0, 0, .12);
+    }
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-height: 48px;
+      overflow-x: auto;
+    }
+    .nav-list a {
+      display: block;
+      padding: 15px 18px;
+      white-space: nowrap;
+    }
+    .nav-list a:hover,
+    .nav-list a.active {
+      background: rgba(255, 255, 255, .16);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      background: #1b3529;
+    }
+    .hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .92;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5, 45, 23, .68), rgba(5, 45, 23, .2) 45%, rgba(0, 0, 0, .18));
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding-top: 88px;
+      color: #fff;
+    }
+    .hero-copy .eyebrow {
+      width: fit-content;
+      padding: 7px 14px;
+      border: 1px solid rgba(255, 255, 255, .7);
+      font-size: 15px;
+    }
+    .hero-copy h1 {
+      margin: 22px 0 12px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.08;
+      font-weight: 700;
+      max-width: 760px;
+    }
+    .hero-copy p {
+      max-width: 640px;
+      font-size: 18px;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .main {
+      padding: 44px 0 58px;
+      background: var(--paper);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 28px;
+    }
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--green);
+    }
+    .section-title h2 {
+      margin: 0;
+      padding: 0 0 10px;
+      color: var(--green);
+      font-size: 25px;
+    }
+    .section-title em {
+      color: #9aa79f;
+      font-style: normal;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .news-list,
+    .notice-list {
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .news-item {
+      display: grid;
+      grid-template-columns: 98px 1fr;
+      gap: 20px;
+      padding: 19px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .news-item:last-child { border-bottom: 0; }
+    .date {
+      color: var(--green);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .date span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    .news-item h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .news-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .topic {
+      position: relative;
+      min-height: 294px;
+      padding: 24px;
+      border: 1px solid #aec8b7;
+      background:
+        linear-gradient(150deg, rgba(11, 107, 56, .96), rgba(6, 58, 31, .9)),
+        url("assets/hero-xibeijing.png") center/cover;
+      color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .topic::after {
+      content: "71";
+      position: absolute;
+      right: -18px;
+      bottom: -36px;
+      font: 700 138px/1 Georgia, serif;
+      color: rgba(255, 255, 255, .08);
+    }
+    .topic .tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, .6);
+      font-size: 13px;
+    }
+    .topic h3 {
+      margin: 28px 0 12px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+    .topic p {
+      margin: 0;
+      color: rgba(255, 255, 255, .86);
+      line-height: 1.75;
+    }
+    .topic .enter {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      font-weight: 700;
+    }
+
+    .quick {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .quick a {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 18px;
+      text-align: center;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .footer {
+      background: #06351d;
+      color: rgba(255, 255, 255, .9);
+      padding: 28px 0;
+      font-size: 13px;
+    }
+    .footer .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .counter { color: rgba(255, 255, 255, .62); }
+    .tiny-note { opacity: .72; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 20;
+      background: rgba(2, 16, 9, .68);
+      backdrop-filter: blur(2px);
+      padding: 26px;
+      overflow: auto;
+    }
+    .overlay.open { display: block; }
+    .panel {
+      width: min(980px, 100%);
+      margin: 52px auto;
+      background: #f8faf7;
+      border: 1px solid #9fb5a7;
+      box-shadow: 0 22px 70px rgba(0, 0, 0, .32);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--green);
+    }
+    .close {
+      border: 0;
+      width: 34px;
+      height: 34px;
+      background: #edf3ef;
+      color: var(--green);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .panel-body {
+      display: grid;
+      grid-template-columns: .86fr 1.14fr;
+      gap: 26px;
+      padding: 24px;
+    }
+    .archive-menu,
+    .archive-doc {
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .archive-menu button {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      padding: 16px 18px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .archive-menu button:hover,
+    .archive-menu button.active {
+      background: #edf5ef;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .archive-doc {
+      min-height: 380px;
+      padding: 24px;
+      position: relative;
+    }
+    .archive-doc h3 {
+      margin: 0 0 16px;
+      color: var(--green);
+      font-size: 24px;
+    }
+    .archive-doc p,
+    .archive-doc li {
+      line-height: 1.85;
+      color: #334139;
+    }
+    .stain {
+      border-left: 4px solid var(--danger);
+      padding: 14px 16px;
+      background: #fff7f7;
+      color: #671515;
+      margin: 18px 0;
+    }
+    .logbox {
+      margin-top: 18px;
+      padding: 16px;
+      background: #101814;
+      color: #b9d7c5;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.75;
+      border: 1px solid #263a30;
+    }
+    .logbox b { color: #ff9d9d; font-weight: 400; }
+    .system-strip {
+      margin: 18px 0;
+      padding: 11px 14px;
+      background: #111;
+      color: #b7ffd0;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .corrupt-card {
+      margin: 16px 0;
+      padding: 18px;
+      border: 1px solid #2b3c33;
+      background:
+        linear-gradient(rgba(255, 255, 255, .88), rgba(255, 255, 255, .88)),
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, .08) 4px);
+    }
+    .corrupt-card h4 {
+      margin: 0 0 10px;
+      color: #1b2d23;
+      font-size: 18px;
+    }
+    .redacted {
+      display: inline-block;
+      min-width: 78px;
+      background: #0a0a0a;
+      color: #0a0a0a;
+      user-select: text;
+    }
+    .danger-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      margin: 8px 8px 0 0;
+      border: 1px solid #7d1b1b;
+      background: #6e1111;
+      color: #fff;
+      padding: 0 14px;
+      cursor: pointer;
+    }
+    .safe-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      margin: 8px 8px 0 0;
+      border: 1px solid #c8d8ce;
+      background: #f6faf7;
+      color: var(--green);
+      padding: 0 14px;
+      cursor: pointer;
+    }
+    .code-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .code-row input {
+      min-width: 0;
+      flex: 1;
+      border: 1px solid #bfcfc5;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .route-card {
+      min-height: 118px;
+      padding: 14px;
+      border: 1px solid #c9d8ce;
+      background: #f8fbf8;
+      position: relative;
+      overflow: hidden;
+    }
+    .route-card::after {
+      content: attr(data-step);
+      position: absolute;
+      right: 10px;
+      bottom: 4px;
+      color: rgba(11, 107, 56, .12);
+      font: 700 54px/1 Georgia, serif;
+    }
+    .route-card strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+    .route-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .route-card.bad {
+      border-color: #782323;
+      background: #fff4f4;
+    }
+    .route-card.bad strong { color: #8a1717; }
+    .jumpscare {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      overflow: hidden;
+    }
+    .jumpscare.show { display: flex; }
+    .jumpscare img {
+      width: 115vw;
+      height: 115vh;
+      object-fit: cover;
+      animation: lunge .95s steps(3) both;
+      filter: contrast(1.4) saturate(.75);
+    }
+    .jumpscare::after {
+      content: "LDZ_2024_NLJG  /  SESSION RESTORED";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      color: #ffefef;
+      font: 700 18px/1.4 Consolas, "Courier New", monospace;
+      text-shadow: 0 0 8px #c00;
+      animation: flicker .18s infinite steps(2);
+    }
+    @keyframes lunge {
+      0% { transform: scale(.72); opacity: 0; }
+      18% { transform: scale(1.52) rotate(-1deg); opacity: 1; }
+      38% { transform: scale(1.05) rotate(1deg); }
+      62% { transform: scale(1.72); filter: contrast(2.2) saturate(.1); }
+      100% { transform: scale(1.18); opacity: .96; }
+    }
+    .glitch {
+      animation: flicker 1.7s infinite steps(2);
+      color: var(--danger);
+    }
+    @keyframes flicker {
+      0%, 82%, 100% { opacity: 1; transform: translate(0, 0); }
+      84% { opacity: .55; transform: translate(1px, -1px); }
+      86% { opacity: .2; transform: translate(-1px, 0); }
+      90% { opacity: .95; transform: translate(0, 1px); }
+    }
+
+    .map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .spot {
+      border: 1px solid var(--line);
+      background: #f8fbf8;
+      padding: 14px;
+      cursor: pointer;
+      min-height: 88px;
+    }
+    .spot strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+    .spot.locked {
+      color: #809188;
+      background: repeating-linear-gradient(135deg, #fbfbfb, #fbfbfb 8px, #f0f3f1 8px, #f0f3f1 16px);
+    }
+    .spotResult {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: #eef5f0;
+      border: 1px solid #c6d8cc;
+      line-height: 1.8;
+    }
+
+    body.anomaly .hero::after {
+      background: linear-gradient(90deg, rgba(30, 0, 0, .6), rgba(5, 45, 23, .26) 45%, rgba(0, 0, 0, .22));
+    }
+    body.anomaly .counter::after {
+      content: "   / 页面计数已改写";
+      color: #ffb4b4;
+    }
+
+    @media (max-width: 860px) {
+      body { overflow-x: hidden; }
+      .header .wrap,
+      .footer .wrap {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .logo-row {
+        width: 100%;
+        gap: 12px;
+      }
+      .logo-row img {
+        width: min(255px, 68vw);
+      }
+      .anniv {
+        flex: 1 1 auto;
+        min-width: 92px;
+        font-size: 14px;
+        white-space: normal;
+      }
+      .search { width: 100%; }
+      .search input { min-width: 0; }
+      .grid,
+      .panel-body {
+        grid-template-columns: 1fr;
+      }
+      .quick {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hero { min-height: 380px; }
+      .hero-copy { padding-top: 56px; }
+      .hero-copy h1 {
+        max-width: 100%;
+        font-size: 32px;
+        word-break: keep-all;
+      }
+      .map { grid-template-columns: 1fr; }
+      .route-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      .wrap { width: calc(100% - 28px); }
+      .header .wrap { width: calc(100vw - 28px); }
+      .search {
+        width: calc(100vw - 28px);
+        max-width: calc(100vw - 28px);
+      }
+      .search input { padding-right: 70px; }
+      .search button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        min-width: 58px;
+        padding: 0 10px;
+      }
+      .topbar .wrap {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .top-links { gap: 18px; }
+      .news-item {
+        grid-template-columns: 70px 1fr;
+        gap: 12px;
+        padding: 16px 14px;
+      }
+      .news-item h3 { font-size: 16px; }
+      .topic h3 { font-size: 26px; }
+      .hero-copy p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <div class="top-links">
+        <span>信息平台</span>
+        <span>图书馆</span>
+        <span>旧版网站</span>
+        <span>VPN</span>
+      </div>
+      <div class="top-links">
+        <span>EN</span>
+        <span id="clock">2026-05-30</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="wrap">
+      <div class="logo-row">
+        <img src="assets/logo.png" alt="北京农学院">
+        <div class="anniv">建校七十周年专题<small>1956 - 2026</small></div>
+      </div>
+      <form class="search" id="searchForm">
+        <input id="searchInput" type="search" placeholder="搜索新闻、校史、专题...">
+        <button type="submit">搜索</button>
+      </form>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="wrap nav-list">
+      <a class="active" href="#">首页</a>
+      <a href="#">学校概况</a>
+      <a href="#">组织机构</a>
+      <a href="#">师资队伍</a>
+      <a href="#">教育教学</a>
+      <a href="#">招生就业</a>
+      <a href="#">科学研究</a>
+      <a href="#">文化北农</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <img src="assets/hero-yhgg.png" alt="北京农学院校园">
+    <div class="hero-copy">
+      <div class="eyebrow">北京农学院欢迎您</div>
+      <h1>七秩耕耘，厚植农本育桃李</h1>
+      <p>以农为本，唯实求新。校庆专题资料站试运行，欢迎师生校友共同回望北农路7号的时间。</p>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="wrap">
+      <div class="grid">
+        <section>
+          <div class="section-title">
+            <h2>北农要闻</h2>
+            <em>important news</em>
+          </div>
+          <div class="news-list">
+            <article class="news-item">
+              <div class="date">05.30<span>2026</span></div>
+              <div>
+                <h3>北京农学院建校七十周年专题资料站进入试运行阶段</h3>
+                <p>专题站将陆续开放校史沿革、校园地图、文化北农、师生记忆等栏目。</p>
+              </div>
+            </article>
+            <article class="news-item">
+              <div class="date">05.28<span>2026</span></div>
+              <div>
+                <h3>学校开展校庆资料整理与旧站内容核验工作</h3>
+                <p>部分早期资料因编号规则调整，将在审核后分批归档。</p>
+              </div>
+            </article>
+            <article class="news-item">
+              <div class="date">05.26<span>2026</span></div>
+              <div>
+                <h3>“北农路7号记忆征集”活动面向全校师生开放</h3>
+                <p>请勿重复提交空白年份、无地点记录或未登记的第零周材料。</p>
+              </div>
+            </article>
+            <article class="news-item">
+              <div class="date">05.24<span>2026</span></div>
+              <div>
+                <h3>学生会协助完成专题资料站第一轮栏目核验</h3>
+                <p>农林经济管理专业大二学生李东泽参与校史检索、地图点位与旧站链接核对工作。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside>
+          <div class="section-title">
+            <h2>专题聚焦</h2>
+            <em>special focus</em>
+          </div>
+          <div class="topic" id="topicEntry" tabindex="0" role="button">
+            <span class="tag">校庆专题 / 内测开放</span>
+            <h3>北农路7号<br>校史档案修复计划</h3>
+            <p>根据校庆工作安排，学生组织协助核验部分旧版页面与地图坐标。若发现异常编号，请按页面提示继续。</p>
+            <span class="enter">进入专题 ></span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="quick">
+        <a href="#" data-tip="校历服务暂未开放">学校校历</a>
+        <a href="#" data-tip="请从专题站入口访问地图">校园地图</a>
+        <a href="#" data-tip="图书馆馆藏检索维护中">图书馆</a>
+        <a href="#" data-tip="旧版网站正在迁移">旧版网站</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div>Copyright © 2026 北京农学院 版权所有　京ICP备05004619号-1</div>
+      <div><span class="counter" id="counter">01/70</span></div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="panelTitle">建校七十周年专题资料站</h2>
+        <button class="close" id="closePanel" aria-label="关闭">×</button>
+      </div>
+      <div class="panel-body">
+        <div class="archive-menu" id="archiveMenu">
+          <button class="active" data-doc="notice">专题说明</button>
+          <button data-doc="history">校史沿革核验</button>
+          <button data-doc="map">校园地图</button>
+          <button data-doc="search">检索说明</button>
+          <button data-doc="reviewer">审核记录</button>
+          <button data-doc="oldsite">旧站缓存</button>
+          <button data-doc="duty">零点值班表</button>
+          <button data-doc="realmap">实景导航</button>
+          <button data-doc="street">牌匾识别</button>
+          <button data-doc="zero">第零年</button>
+        </div>
+        <article class="archive-doc" id="archiveDoc"></article>
+      </div>
+    </section>
+  </div>
+
+  <div class="jumpscare" id="jumpscare" aria-hidden="true">
+    <img src="assets/archive-face.png" alt="">
+  </div>
+
+  <script>
+    const docs = {
+      notice: `
+        <h3>专题说明</h3>
+        <p>本专题站用于北京农学院建校七十周年相关资料的整理、展示与内部核验。当前页面为试运行版本。</p>
+        <p>审核人员可依次查看“校史沿革核验”“校园地图”“检索说明”。如页脚编号与当前栏目数量不一致，请记录截图并继续浏览。</p>
+        <div class="stain">系统提示：检测到未归档栏目 1 项。编号：00。状态：不建议公开。</div>
+      `,
+      history: `
+        <h3>校史沿革核验</h3>
+        <ul>
+          <li>1956：河北省通县农业学校创建。</li>
+          <li>1965：建立半农半读的北京农业劳动大学。</li>
+          <li>1978：经批准更名为北京农学院。</li>
+          <li>2026：建校七十周年专题资料站试运行。</li>
+        </ul>
+        <p>请核对以上年份。若发现“第零年”记录，请勿删除，先检索关键词：<strong>北农路7号</strong>。</p>
+      `,
+      map: `
+        <h3>校园地图</h3>
+        <p>点击地点查看坐标记录。夜间记录仅供专题审核使用。</p>
+        <div class="map">
+          <div class="spot" data-place="图书馆"><strong>图书馆</strong>馆藏资源与旧站索引</div>
+          <div class="spot" data-place="礼堂"><strong>礼堂</strong>报告、校庆、活动记录</div>
+          <div class="spot" data-place="生资楼"><strong>生资楼</strong>实验教学记录</div>
+          <div class="spot" data-place="百花园"><strong>百花园</strong>校园风光采集点</div>
+          <div class="spot" data-place="北农路7号"><strong>北农路7号</strong>法定注册地</div>
+          <div class="spot locked" data-place="未登记建筑"><strong>00号楼</strong>地图中不存在</div>
+        </div>
+        <div class="spotResult" id="spotResult">请选择一个地点。</div>
+      `,
+      search: `
+        <h3>检索说明</h3>
+        <p>首页搜索框支持新闻、校史、专题关键词。试运行期间，以下词条可能返回维护页面：</p>
+        <ul>
+          <li>1956</li>
+          <li>厚德笃行</li>
+          <li>博学尚农</li>
+          <li>北农路7号</li>
+        </ul>
+        <p>禁止访问词条不会出现在公开搜索建议中。若页面提示“重复会话”，请优先检索账号对应姓名。</p>
+        <div class="system-strip">suggestion_cache: 李东泽 / 农林经济管理 / 00号楼 / 202605300000</div>
+      `,
+      reviewer: `
+        <h3>审核记录</h3>
+        <p>专题资料站第一轮审核账号共 7 个。当前读取到 8 条登录记录。</p>
+        <ul>
+          <li>审核员：李东泽</li>
+          <li>年级专业：农林经济管理 大二</li>
+          <li>负责栏目：校史检索、校园地图、旧版网站链接核验</li>
+          <li>最近一次登录：2026-05-30 00:00:00</li>
+          <li>登录地点：北农路7号 / 未登记点位</li>
+        </ul>
+        <div class="stain">系统提示：李东泽账号已提交“第零年”保留申请。申请编号不存在。审核意见不存在。申请人在线。</div>
+        <div class="logbox">
+          [00:00:00] restore archive page: 71/70<br>
+          [00:00:01] reviewer ldz_2024_nljg connected<br>
+          [00:00:02] duplicate session detected<br>
+          [00:00:02] current viewer: <b>not Li Dongze</b><br>
+          [00:00:03] waiting for manual confirmation...
+        </div>
+        <p class="glitch">请不要在公开搜索框继续输入他的名字。请不要恢复他的会话。</p>
+        <button class="danger-btn" data-action="restore">恢复李东泽的审核会话</button>
+        <button class="safe-btn" data-doc-jump="oldsite">查看旧站缓存</button>
+      `,
+      oldsite: `
+        <h3>旧站缓存</h3>
+        <p>旧版网站迁移记录中存在 1 个无法校验的页面。页面标题、作者、发布时间均与校庆专题站不匹配。</p>
+        <div class="corrupt-card">
+          <h4>cache://bua1956/archive/road7/week-zero</h4>
+          <p>页面标题：北农路7号记忆征集 - 第零周</p>
+          <p>提交人：李东泽 / 农林经济管理 / 大二</p>
+          <p>提交时间：2026-05-30 00:00:00</p>
+          <p>正文摘录：我已经把七十页全部核完。可是地图里还有一个入口，它不在图书馆，不在礼堂，也不在任何楼里。它在“返回首页”之前。</p>
+          <p>隐藏字段：<span class="redacted">202605300000</span></p>
+        </div>
+        <div class="stain">缓存校验失败：该页面曾被删除 7 次，恢复 8 次。</div>
+        <button class="safe-btn" data-doc-jump="duty">查看零点值班表</button>
+      `,
+      duty: `
+        <h3>零点值班表</h3>
+        <p>以下记录来自专题站上线前的学生协助排班。系统时间在 00:00:00 后出现偏移。</p>
+        <div class="corrupt-card">
+          <h4>2026-05-29 至 2026-05-30</h4>
+          <ul>
+            <li>22:00-23:00　栏目链接核验　学生会宣传部</li>
+            <li>23:00-23:40　校园地图点位复查　李东泽</li>
+            <li>23:40-23:57　旧站缓存比对　李东泽</li>
+            <li>23:57-00:00　退出审核系统　<span class="redacted">失败</span></li>
+            <li>00:00-00:00　第零年保留申请　李东泽</li>
+          </ul>
+        </div>
+        <div class="logbox">
+          [23:59:57] closing session ldz_2024_nljg<br>
+          [23:59:58] session refused<br>
+          [23:59:59] page count changed: 70 -> 71<br>
+          [00:00:00] user said: “不要把我写进去。”<br>
+          [00:00:00] system wrote him in
+        </div>
+        <p>若需进入“第零年”，请先完成实景导航校验。李东泽最后一次坐标不在室内。</p>
+        <button class="safe-btn" data-doc-jump="realmap">打开实景导航校验</button>
+      `,
+      realmap: `
+        <h3>实景导航校验</h3>
+        <p>请打开校园地图或实景导航，从 <strong>北农路7号</strong> 进入，按值班表时间顺序核对四个现实点位。官网校园风光资料中出现过这些坐标：礼堂东北侧、经管楼前、图书馆南侧、生资楼东侧。</p>
+        <div class="route-grid">
+          <div class="route-card" data-step="23:00"><strong>礼堂东北侧</strong><span>在实景里确认建筑牌匾。记录第一个字：礼。</span></div>
+          <div class="route-card" data-step="23:17"><strong>经管楼前</strong><span>确认农林经济管理线索。记录第一个字：经。</span></div>
+          <div class="route-card" data-step="23:40"><strong>图书馆南侧</strong><span>确认“书香楼外”坐标。记录第一个字：图。</span></div>
+          <div class="route-card" data-step="23:57"><strong>生资楼东侧</strong><span>确认最后一次停留点。记录第一个字：生。</span></div>
+        </div>
+        <div class="stain">系统提示：李东泽不是按时间顺序离开的。他是倒着走回来的。</div>
+        <p>把四个字按“返回路线”倒序排列，得到实景口令。</p>
+        <button class="danger-btn" data-action="routeWake">请求定位校验</button>
+        <button class="safe-btn" data-doc-jump="street">进入牌匾识别</button>
+      `,
+      street: `
+        <h3>牌匾识别</h3>
+        <p>实景导航记录显示，审核员在每个点位都停留了 17 秒。系统只读取建筑名的第一个字。</p>
+        <div class="corrupt-card">
+          <h4>路线字串</h4>
+          <p>时间顺序：礼 / 经 / 图 / 生</p>
+          <p>返回顺序：<span class="redacted">生图经礼</span></p>
+          <p>异常提示：不要从正门进入。正门只会带你回到首页。</p>
+        </div>
+        <div class="code-row">
+          <input id="routeCode" placeholder="输入实景口令">
+          <button class="danger-btn" data-action="submitRoute">校验路线</button>
+        </div>
+        <p id="routeHint" class="glitch"></p>
+      `,
+      zero: `
+        <h3 class="glitch">第零年</h3>
+        <p>此页面不属于建校七十周年专题资料站。</p>
+        <p>如果你能看到这段文字，说明你正在使用审核权限。请回答：为什么第七十一页会出现在七十周年专题里？</p>
+        <p>李东泽没有删除它。他只是在 00:00:00 之后，把所有栏目重新数了一遍。先数网页，再数地图。网页口令来自旧站缓存，实景口令来自返回路线。</p>
+        <div class="stain">审核日志 00/70：上一位审核员选择了“保留”。下一位审核员已进入页面。</div>
+        <div class="code-row">
+          <input id="zeroCode" placeholder="输入旧站缓存字段或组合口令">
+          <button class="danger-btn" data-action="submitZero">提交</button>
+        </div>
+        <p id="zeroHint" class="glitch"></p>
+      `
+    };
+
+    const overlay = document.getElementById("overlay");
+    const archiveDoc = document.getElementById("archiveDoc");
+    const menu = document.getElementById("archiveMenu");
+    const counter = document.getElementById("counter");
+    const jumpscare = document.getElementById("jumpscare");
+    let wrongZeroCode = 0;
+    let routeSolved = false;
+
+    function openPanel(doc = "notice") {
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      setDoc(doc);
+    }
+
+    function setDoc(doc) {
+      archiveDoc.innerHTML = docs[doc];
+      menu.querySelectorAll("button").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.doc === doc);
+      });
+      if (doc === "zero") {
+        document.body.classList.add("anomaly");
+        counter.textContent = "71/70";
+      }
+      if (doc === "oldsite") counter.textContent = "cache/70";
+      if (doc === "duty") counter.textContent = "00:00/70";
+      if (doc === "realmap") {
+        document.body.classList.add("anomaly");
+        counter.textContent = "gps/70";
+        setTimeout(() => {
+          if (archiveDoc.querySelector(".system-strip")) return;
+          archiveDoc.insertAdjacentHTML("beforeend", `<div class="system-strip">requesting campus position... permission denied... fallback to street-view memory</div>`);
+        }, 900);
+      }
+      if (doc === "street") counter.textContent = "route/70";
+      if (doc === "map") bindMap();
+    }
+
+    function playNoise() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = "sawtooth";
+        oscillator.frequency.setValueAtTime(65, ctx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(520, ctx.currentTime + .18);
+        gain.gain.setValueAtTime(.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.22, ctx.currentTime + .04);
+        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .65);
+        oscillator.connect(gain).connect(ctx.destination);
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + .7);
+      } catch (error) {}
+    }
+
+    function triggerJumpscare(nextDoc = "zero") {
+      document.body.classList.add("anomaly");
+      counter.textContent = "LDZ/00";
+      jumpscare.classList.add("show");
+      jumpscare.setAttribute("aria-hidden", "false");
+      playNoise();
+      setTimeout(() => {
+        jumpscare.classList.remove("show");
+        jumpscare.setAttribute("aria-hidden", "true");
+        openPanel(nextDoc);
+      }, 1250);
+    }
+
+    function bindMap() {
+      archiveDoc.querySelectorAll(".spot").forEach(spot => {
+        spot.addEventListener("click", () => {
+          const place = spot.dataset.place;
+          const result = document.getElementById("spotResult");
+          if (place === "未登记建筑") {
+            document.body.classList.add("anomaly");
+            counter.textContent = "00/70";
+            result.innerHTML = "未登记建筑不在当前校园地图中。<br>系统建议：返回首页，检索 <strong>李东泽</strong>。";
+          } else if (place === "北农路7号") {
+            result.innerHTML = "北农路7号：已匹配校史档案。<br>隐藏检索词已加入搜索缓存。";
+          } else {
+            result.textContent = place + "：坐标记录正常。";
+          }
+        });
+      });
+    }
+
+    document.getElementById("topicEntry").addEventListener("click", () => openPanel("notice"));
+    document.getElementById("topicEntry").addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") openPanel("notice");
+    });
+    document.getElementById("closePanel").addEventListener("click", () => {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+    });
+    menu.addEventListener("click", event => {
+      const button = event.target.closest("button[data-doc]");
+      if (button) setDoc(button.dataset.doc);
+    });
+    archiveDoc.addEventListener("click", event => {
+      const jumpButton = event.target.closest("[data-doc-jump]");
+      if (jumpButton) {
+        setDoc(jumpButton.dataset.docJump);
+        return;
+      }
+      const action = event.target.closest("[data-action]")?.dataset.action;
+      if (action === "restore") {
+        triggerJumpscare("oldsite");
+      }
+      if (action === "routeWake") {
+        counter.textContent = "gps:00";
+        archiveDoc.insertAdjacentHTML("beforeend", `<div class="logbox">[gps] 北农路7号 connected<br>[gps] 礼堂东北侧 connected<br>[gps] 经管楼前 connected<br>[gps] 图书馆南侧 connected<br>[gps] 生资楼东侧 connected<br>[gps] reviewer is behind the current route</div>`);
+        setTimeout(() => triggerJumpscare("street"), 850);
+      }
+      if (action === "submitRoute") {
+        const input = document.getElementById("routeCode");
+        const hint = document.getElementById("routeHint");
+        const value = (input?.value || "").replace(/\s+/g, "");
+        if (value === "生图经礼" || value.toLowerCase() === "shengtujingli") {
+          routeSolved = true;
+          counter.textContent = "real/71";
+          archiveDoc.innerHTML = `
+            <h3>路线校验通过</h3>
+            <p>实景口令已写入当前审核会话：<strong>生图经礼</strong></p>
+            <div class="logbox">
+              [route] 礼堂东北侧 -> 经管楼前 -> 图书馆南侧 -> 生资楼东侧<br>
+              [route] reversed by reviewer<br>
+              [route] final phrase: 生图经礼<br>
+              [route] next: 第零年
+            </div>
+            <button class="danger-btn" data-doc-jump="zero">进入第零年</button>
+          `;
+        } else {
+          if (hint) hint.textContent = "路线错误。李东泽是倒着回来的。";
+          triggerJumpscare("street");
+        }
+      }
+      if (action === "submitZero") {
+        const input = document.getElementById("zeroCode");
+        const hint = document.getElementById("zeroHint");
+        const value = (input?.value || "").trim().replace(/\s+/g, "");
+        if (value === "202605300000" || value === "202605300000-生图经礼" || value === "生图经礼" || value.toLowerCase() === "ldz_2024_nljg") {
+          archiveDoc.innerHTML = `
+            <h3 class="glitch">归档完成</h3>
+            <p>第七十一页已被保留。李东泽的审核会话已转移给当前浏览者。</p>
+            <div class="logbox">
+              [00:00:00] old reviewer: 李东泽<br>
+              [00:00:00] new reviewer: current viewer<br>
+              [00:00:00] real route: ${routeSolved ? "verified" : "accepted without route"}<br>
+              [00:00:00] page count changed: 71 -> 72<br>
+              [00:00:00] do not close the official website
+            </div>
+            <button class="danger-btn" data-action="restore">重新读取档案照片</button>
+          `;
+          counter.textContent = "72/70";
+        } else {
+          wrongZeroCode += 1;
+          if (hint) hint.textContent = wrongZeroCode >= 2 ? "字段错误。李东泽的会话正在靠近。你还没有把地图倒过来。" : "字段错误。旧站缓存里有一串 12 位数字；现实地图里有四个字。";
+          if (wrongZeroCode >= 3) triggerJumpscare("zero");
+        }
+      }
+    });
+
+    document.querySelectorAll("[data-tip]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        alert(link.dataset.tip);
+      });
+    });
+
+    document.getElementById("searchForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const query = document.getElementById("searchInput").value.trim();
+      if (!query) return;
+      const normalized = query.toLowerCase();
+      if (query.includes("李东泽")) {
+        openPanel("reviewer");
+        document.body.classList.add("anomaly");
+        counter.textContent = "08/07";
+      } else if (query.includes("农林经济管理") || query.includes("大二")) {
+        openPanel("reviewer");
+      } else if (query.includes("旧站") || query.includes("缓存")) {
+        openPanel("oldsite");
+      } else if (query.includes("值班") || query.includes("零点")) {
+        openPanel("duty");
+      } else if (query.includes("实景") || query.includes("导航") || query.includes("路线") || query.includes("地图解密")) {
+        openPanel("realmap");
+      } else if (query.includes("牌匾") || query.includes("生图经礼")) {
+        openPanel("street");
+      } else if (["第零年", "00", "71/70", "未归档"].includes(query) || normalized.includes("zero")) {
+        openPanel("zero");
+      } else if (query.includes("北农路7号") || query.includes("1956")) {
+        openPanel("history");
+      } else if (query.includes("厚德笃行") || query.includes("博学尚农")) {
+        openPanel("search");
+      } else {
+        openPanel("notice");
+        archiveDoc.innerHTML = `<h3>搜索结果</h3><p>共有 <strong>0</strong> 项符合“${query}”的公开结果。</p><div class="stain">另有 1 项结果被隐藏。原因：栏目编号异常。</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
