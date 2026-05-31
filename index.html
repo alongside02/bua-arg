@@ -380,6 +380,17 @@
       color: var(--green);
       font-weight: 700;
     }
+    .archive-menu button.locked {
+      color: #87968e;
+      background: #f4f6f4;
+      cursor: not-allowed;
+    }
+    .archive-menu button.locked::after {
+      content: "  LOCKED";
+      float: right;
+      color: #9b1b1b;
+      font: 700 10px/1.6 Consolas, "Courier New", monospace;
+    }
     .archive-doc {
       min-height: 380px;
       padding: 24px;
@@ -413,6 +424,33 @@
       border: 1px solid #263a30;
     }
     .logbox b { color: #ff9d9d; font-weight: 400; }
+    .progress-panel {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: -10px;
+    }
+    .progress-step {
+      min-height: 44px;
+      border: 1px solid #d0ddd4;
+      background: #fff;
+      color: #708078;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .progress-step.done {
+      border-color: #90b79c;
+      background: #edf6ef;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .progress-step.current {
+      border-color: #7d1b1b;
+      color: #7d1b1b;
+      background: #fff5f5;
+    }
     .system-strip {
       margin: 18px 0;
       padding: 11px 14px;
@@ -525,34 +563,39 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: #000;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.03), rgba(255,255,255,.03) 1px, transparent 2px, transparent 5px),
+        radial-gradient(circle, rgba(98, 0, 0, .5), rgba(0, 0, 0, .96) 55%);
       overflow: hidden;
     }
     .jumpscare.show { display: flex; }
     .jumpscare img {
-      width: 115vw;
-      height: 115vh;
+      width: min(62vmin, 560px);
+      height: min(62vmin, 560px);
       object-fit: cover;
-      animation: lunge .95s steps(3) both;
-      filter: contrast(1.4) saturate(.75);
+      opacity: .82;
+      animation: lunge 1.05s steps(5) both;
+      filter: contrast(1.55) saturate(.55);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 0 90px rgba(120, 0, 0, .45);
     }
     .jumpscare::after {
-      content: "LDZ_2024_NLJG  /  SESSION RESTORED";
+      content: "ARCHIVE PREVIEW FAILED / VIEWER HASH RECORDED";
       position: absolute;
       left: 24px;
       right: 24px;
       bottom: 24px;
       color: #ffefef;
-      font: 700 18px/1.4 Consolas, "Courier New", monospace;
-      text-shadow: 0 0 8px #c00;
+      font: 700 15px/1.4 Consolas, "Courier New", monospace;
+      text-shadow: 0 0 8px #500;
       animation: flicker .18s infinite steps(2);
     }
     @keyframes lunge {
-      0% { transform: scale(.72); opacity: 0; }
-      18% { transform: scale(1.52) rotate(-1deg); opacity: 1; }
-      38% { transform: scale(1.05) rotate(1deg); }
-      62% { transform: scale(1.72); filter: contrast(2.2) saturate(.1); }
-      100% { transform: scale(1.18); opacity: .96; }
+      0% { transform: scale(.96); opacity: 0; clip-path: inset(42% 0 41% 0); }
+      22% { transform: scale(1.02) translateX(-5px); opacity: .88; clip-path: inset(0 0 0 0); }
+      44% { transform: scale(.99) translateX(7px); opacity: .54; filter: contrast(2.1) saturate(.1); }
+      67% { transform: scale(1.04); opacity: .9; }
+      100% { transform: scale(1.01); opacity: .74; }
     }
     .glitch {
       animation: flicker 1.7s infinite steps(2);
@@ -641,6 +684,7 @@
       }
       .map { grid-template-columns: 1fr; }
       .route-grid { grid-template-columns: 1fr; }
+      .progress-panel { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 520px) {
@@ -803,9 +847,11 @@
         <button class="close" id="closePanel" aria-label="关闭">×</button>
       </div>
       <div class="panel-body">
+        <div class="progress-panel" id="progressPanel"></div>
         <div class="archive-menu" id="archiveMenu">
           <button class="active" data-doc="notice">专题说明</button>
           <button data-doc="history">校史沿革核验</button>
+          <button data-doc="source">源码批注</button>
           <button data-doc="map">校园地图</button>
           <button data-doc="search">检索说明</button>
           <button data-doc="reviewer">审核记录</button>
@@ -824,13 +870,19 @@
     <img src="assets/archive-face.png" alt="">
   </div>
 
+  <!-- ARG-LAYER-2: account=ldz_2024_nljg; source clues are part of the game, not a bug. -->
   <script>
     const docs = {
       notice: `
         <h3>专题说明</h3>
-        <p>本专题站用于北京农学院建校七十周年相关资料的整理、展示与内部核验。当前页面为试运行版本。</p>
-        <p>审核人员可依次查看“校史沿革核验”“校园地图”“检索说明”。如页脚编号与当前栏目数量不一致，请记录截图并继续浏览。</p>
-        <div class="stain">系统提示：检测到未归档栏目 1 项。编号：00。状态：不建议公开。</div>
+        <p>本专题站用于北京农学院建校七十周年相关资料的整理、展示与内部核验。当前页面只开放第一层。</p>
+        <p>不要急着点菜单。先确认页面底部编号、专题年份和“未归档栏目”三者是否相容。</p>
+        <div class="stain">系统提示：检测到未归档栏目 1 项。公开页数 70，实际索引 71。请提交异常编号。</div>
+        <div class="code-row">
+          <input id="noticeCode" placeholder="输入异常页码，例如 00/00">
+          <button class="danger-btn" data-action="submitNotice">核验页码</button>
+        </div>
+        <p id="noticeHint" class="glitch"></p>
       `,
       history: `
         <h3>校史沿革核验</h3>
@@ -840,7 +892,21 @@
           <li>1978：经批准更名为北京农学院。</li>
           <li>2026：建校七十周年专题资料站试运行。</li>
         </ul>
-        <p>请核对以上年份。若发现“第零年”记录，请勿删除，先检索关键词：<strong>北农路7号</strong>。</p>
+        <p>请核对以上年份。若发现“第零年”记录，请勿删除。第一层通过后，源码会出现下一名审核员的账号。</p>
+      `,
+      source: `
+        <h3>源码批注</h3>
+        <p>经典网页谜题不会把答案只放在页面正文里。请查看本页 HTML 源码，寻找 <strong>ARG-LAYER-2</strong> 批注。</p>
+        <div class="corrupt-card">
+          <h4>线索格式</h4>
+          <p>account = ?</p>
+          <p>账号不是名字。它是下一层搜索关键词，也是重复会话的钥匙。</p>
+        </div>
+        <div class="code-row">
+          <input id="sourceCode" placeholder="输入源码里的 account">
+          <button class="danger-btn" data-action="submitSource">提交账号</button>
+        </div>
+        <p id="sourceHint" class="glitch"></p>
       `,
       map: `
         <h3>校园地图</h3>
@@ -886,8 +952,12 @@
           [00:00:03] waiting for manual confirmation...
         </div>
         <p class="glitch">请不要在公开搜索框继续输入他的名字。请不要恢复他的会话。</p>
-        <button class="danger-btn" data-action="restore">恢复李东泽的审核会话</button>
-        <button class="safe-btn" data-doc-jump="oldsite">查看旧站缓存</button>
+        <p>重复会话编号由“登录记录数/账号数”组成。</p>
+        <div class="code-row">
+          <input id="reviewCode" placeholder="输入重复会话编号">
+          <button class="danger-btn" data-action="submitReviewer">确认重复会话</button>
+        </div>
+        <p id="reviewHint" class="glitch"></p>
       `,
       oldsite: `
         <h3>旧站缓存</h3>
@@ -901,7 +971,12 @@
           <p>隐藏字段：<span class="redacted">202605300000</span></p>
         </div>
         <div class="stain">缓存校验失败：该页面曾被删除 7 次，恢复 8 次。</div>
-        <button class="safe-btn" data-doc-jump="duty">查看零点值班表</button>
+        <p>黑条不是遮挡。选中它，或者从提交时间中去掉标点。</p>
+        <div class="code-row">
+          <input id="cacheCode" placeholder="输入 12 位旧站字段">
+          <button class="danger-btn" data-action="submitCache">写入缓存字段</button>
+        </div>
+        <p id="cacheHint" class="glitch"></p>
       `,
       duty: `
         <h3>零点值班表</h3>
@@ -974,8 +1049,63 @@
     const menu = document.getElementById("archiveMenu");
     const counter = document.getElementById("counter");
     const jumpscare = document.getElementById("jumpscare");
+    const progressPanel = document.getElementById("progressPanel");
     let wrongZeroCode = 0;
     let routeSolved = false;
+    const progressSteps = [
+      ["notice", "页脚异常"],
+      ["source", "源码账号"],
+      ["reviewer", "重复会话"],
+      ["oldsite", "旧站字段"],
+      ["realmap", "实景路线"],
+      ["zero", "第零年"],
+      ["ending", "归档"]
+    ];
+    const defaultUnlocked = {
+      notice: true,
+      history: true,
+      search: true,
+      source: false,
+      map: false,
+      reviewer: false,
+      oldsite: false,
+      duty: false,
+      realmap: false,
+      street: false,
+      zero: false,
+      ending: false
+    };
+    let unlocked = { ...defaultUnlocked };
+
+    try {
+      unlocked = { ...defaultUnlocked, ...JSON.parse(localStorage.getItem("buaArgUnlocked") || "{}") };
+      routeSolved = localStorage.getItem("buaArgRouteSolved") === "true";
+    } catch (error) {}
+
+    function saveProgress() {
+      try {
+        localStorage.setItem("buaArgUnlocked", JSON.stringify(unlocked));
+        localStorage.setItem("buaArgRouteSolved", String(routeSolved));
+      } catch (error) {}
+    }
+
+    function unlock(doc, nextDoc = doc) {
+      unlocked[doc] = true;
+      saveProgress();
+      updateLocks(nextDoc);
+    }
+
+    function updateLocks(currentDoc = "notice") {
+      menu.querySelectorAll("button[data-doc]").forEach(btn => {
+        const doc = btn.dataset.doc;
+        btn.classList.toggle("locked", !unlocked[doc]);
+        btn.classList.toggle("active", doc === currentDoc);
+      });
+      progressPanel.innerHTML = progressSteps.map(([doc, label]) => {
+        const cls = unlocked[doc] ? "done" : doc === currentDoc ? "current" : "";
+        return `<div class="progress-step ${cls}">${label}<br>${unlocked[doc] ? "已解锁" : "待解锁"}</div>`;
+      }).join("");
+    }
 
     function openPanel(doc = "notice") {
       overlay.classList.add("open");
@@ -984,10 +1114,21 @@
     }
 
     function setDoc(doc) {
+      if (!unlocked[doc]) {
+        archiveDoc.innerHTML = `
+          <h3>档案未解锁</h3>
+          <p>当前栏目需要上一层钥匙。不要跳关，系统会记录不连续访问。</p>
+          <div class="logbox">
+            [lock] requested: ${doc}<br>
+            [lock] required: ${progressSteps.find(([step]) => !unlocked[step])?.[1] || "unknown"}<br>
+            [lock] hint: 页码 -> 源码 -> 会话 -> 缓存 -> 实景 -> 第零年
+          </div>
+        `;
+        updateLocks(doc);
+        return;
+      }
       archiveDoc.innerHTML = docs[doc];
-      menu.querySelectorAll("button").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.doc === doc);
-      });
+      updateLocks(doc);
       if (doc === "zero") {
         document.body.classList.add("anomaly");
         counter.textContent = "71/70";
@@ -1034,7 +1175,7 @@
         jumpscare.classList.remove("show");
         jumpscare.setAttribute("aria-hidden", "true");
         openPanel(nextDoc);
-      }, 1250);
+      }, 1050);
     }
 
     function bindMap() {
@@ -1077,7 +1218,56 @@
       if (action === "restore") {
         triggerJumpscare("oldsite");
       }
+      if (action === "submitNotice") {
+        const input = document.getElementById("noticeCode");
+        const hint = document.getElementById("noticeHint");
+        const value = (input?.value || "").trim();
+        if (value === "71/70" || value === "71") {
+          unlock("source", "source");
+          setDoc("source");
+          counter.textContent = "source/70";
+        } else if (hint) {
+          hint.textContent = "页码不连续。公开页数是 70，实际索引多了 1。";
+        }
+      }
+      if (action === "submitSource") {
+        const input = document.getElementById("sourceCode");
+        const hint = document.getElementById("sourceHint");
+        const value = (input?.value || "").trim().toLowerCase();
+        if (value === "ldz_2024_nljg") {
+          unlock("reviewer", "reviewer");
+          unlock("map", "reviewer");
+          setDoc("reviewer");
+          counter.textContent = "08/07";
+        } else if (hint) {
+          hint.textContent = "源码里有 account 字段，不是姓名。";
+        }
+      }
+      if (action === "submitReviewer") {
+        const input = document.getElementById("reviewCode");
+        const hint = document.getElementById("reviewHint");
+        const value = (input?.value || "").trim();
+        if (value === "08/07" || value === "8/7") {
+          unlock("oldsite", "oldsite");
+          setDoc("oldsite");
+        } else if (hint) {
+          hint.textContent = "账号 7 个，登录记录 8 条。顺序不能反。";
+        }
+      }
+      if (action === "submitCache") {
+        const input = document.getElementById("cacheCode");
+        const hint = document.getElementById("cacheHint");
+        const value = (input?.value || "").trim().replace(/\D/g, "");
+        if (value === "202605300000") {
+          unlock("duty", "duty");
+          unlock("realmap", "duty");
+          setDoc("duty");
+        } else if (hint) {
+          hint.textContent = "字段长度不对。它来自 2026-05-30 00:00:00。";
+        }
+      }
       if (action === "routeWake") {
+        unlock("street", "realmap");
         counter.textContent = "gps:00";
         archiveDoc.insertAdjacentHTML("beforeend", `<div class="logbox">[gps] 北农路7号 connected<br>[gps] 礼堂东北侧 connected<br>[gps] 经管楼前 connected<br>[gps] 图书馆南侧 connected<br>[gps] 生资楼东侧 connected<br>[gps] reviewer is behind the current route</div>`);
         setTimeout(() => triggerJumpscare("street"), 850);
@@ -1088,6 +1278,8 @@
         const value = (input?.value || "").replace(/\s+/g, "");
         if (value === "生图经礼" || value.toLowerCase() === "shengtujingli") {
           routeSolved = true;
+          saveProgress();
+          unlock("zero", "zero");
           counter.textContent = "real/71";
           archiveDoc.innerHTML = `
             <h3>路线校验通过</h3>
@@ -1110,6 +1302,7 @@
         const hint = document.getElementById("zeroHint");
         const value = (input?.value || "").trim().replace(/\s+/g, "");
         if (value === "202605300000" || value === "202605300000-生图经礼" || value === "生图经礼" || value.toLowerCase() === "ldz_2024_nljg") {
+          unlock("ending", "ending");
           archiveDoc.innerHTML = `
             <h3 class="glitch">归档完成</h3>
             <p>第七十一页已被保留。李东泽的审核会话已转移给当前浏览者。</p>
@@ -1143,12 +1336,32 @@
       const query = document.getElementById("searchInput").value.trim();
       if (!query) return;
       const normalized = query.toLowerCase();
-      if (query.includes("李东泽")) {
+      if (query === "71/70" || query === "71") {
+        unlock("source", "source");
+        openPanel("source");
+      } else if (normalized.includes("ldz_2024_nljg")) {
+        unlock("reviewer", "reviewer");
+        unlock("map", "reviewer");
+        openPanel("reviewer");
+        counter.textContent = "08/07";
+      } else if (query.includes("李东泽")) {
+        if (!unlocked.reviewer) {
+          openPanel("source");
+          archiveDoc.insertAdjacentHTML("beforeend", `<div class="stain">姓名检索被驳回：系统需要账号，不需要姓名。</div>`);
+          return;
+        }
         openPanel("reviewer");
         document.body.classList.add("anomaly");
         counter.textContent = "08/07";
       } else if (query.includes("农林经济管理") || query.includes("大二")) {
         openPanel("reviewer");
+      } else if (query.includes("08/07") || query.includes("8/7")) {
+        unlock("oldsite", "oldsite");
+        openPanel("oldsite");
+      } else if (query.includes("202605300000")) {
+        unlock("duty", "duty");
+        unlock("realmap", "duty");
+        openPanel("duty");
       } else if (query.includes("旧站") || query.includes("缓存")) {
         openPanel("oldsite");
       } else if (query.includes("值班") || query.includes("零点")) {
@@ -1168,6 +1381,7 @@
         archiveDoc.innerHTML = `<h3>搜索结果</h3><p>共有 <strong>0</strong> 项符合“${query}”的公开结果。</p><div class="stain">另有 1 项结果被隐藏。原因：栏目编号异常。</div>`;
       }
     });
+    updateLocks("notice");
   </script>
 </body>
 </html>
