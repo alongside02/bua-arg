@@ -533,6 +533,70 @@
       cursor: pointer;
       font-size: 16px;
     }
+    .takeover {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.025), rgba(255,255,255,.025) 1px, transparent 2px, transparent 6px),
+        radial-gradient(circle at 50% 36%, rgba(48, 90, 61, .32), transparent 34%),
+        #020503;
+      color: #c8ffd8;
+      font-family: Consolas, "Courier New", monospace;
+      overflow: hidden;
+    }
+    .takeover.show { display: block; }
+    .fake-browser {
+      width: min(960px, calc(100vw - 32px));
+      margin: 42px auto 0;
+      border: 1px solid rgba(178, 255, 205, .28);
+      background: rgba(3, 15, 8, .9);
+      box-shadow: 0 0 80px rgba(0,0,0,.75);
+    }
+    .fake-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 9px;
+      border-bottom: 1px solid rgba(178,255,205,.18);
+      background: rgba(255,255,255,.04);
+    }
+    .fake-tab {
+      flex: 1;
+      min-width: 0;
+      padding: 7px 10px;
+      background: rgba(255,255,255,.08);
+      color: #cfe9d6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+    .fake-tab.bad { color: #ffd1d1; background: rgba(120,0,0,.28); }
+    .fake-address {
+      margin: 10px;
+      padding: 9px 12px;
+      border: 1px solid rgba(178,255,205,.15);
+      color: #78b98e;
+      background: rgba(0,0,0,.45);
+      font-size: 12px;
+    }
+    .takeover-log {
+      height: min(58vh, 520px);
+      overflow: hidden;
+      padding: 18px;
+      line-height: 1.78;
+      font-size: 14px;
+    }
+    .takeover-log .bad { color: #ff9c9c; }
+    .takeover-log .dim { color: #6f967b; }
+    .takeover-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 18px 18px;
+      border-top: 1px solid rgba(178,255,205,.14);
+    }
     @keyframes popupIn {
       from { transform: translateY(14px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
@@ -923,6 +987,21 @@
     <div class="popup-body" id="popupBody"></div>
   </div>
 
+  <div class="takeover" id="takeover" aria-hidden="true">
+    <div class="fake-browser">
+      <div class="fake-tabs">
+        <div class="fake-tab">北京农学院</div>
+        <div class="fake-tab">专题资料站</div>
+        <div class="fake-tab bad">screen-071://sync</div>
+      </div>
+      <div class="fake-address" id="fakeAddress">https://alongside02.github.io/bua-arg/#screen-071</div>
+      <div class="takeover-log" id="takeoverLog"></div>
+      <div class="takeover-actions">
+        <button class="safe-btn" id="takeoverClose">恢复页面</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ARG-LAYER-2: account=ldz_2024_nljg; sync-node=screen-071; checksum=08/07 -->
   <script>
     const docs = {
@@ -1141,6 +1220,9 @@
     const popup = document.getElementById("systemPopup");
     const popupTitle = document.getElementById("popupTitle");
     const popupBody = document.getElementById("popupBody");
+    const takeover = document.getElementById("takeover");
+    const takeoverLog = document.getElementById("takeoverLog");
+    const fakeAddress = document.getElementById("fakeAddress");
     let wrongZeroCode = 0;
     let routeSolved = false;
     const progressSteps = [
@@ -1200,6 +1282,32 @@
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
       }, ms);
+    }
+
+    function showTakeover(reason = "sync") {
+      const rows = [
+        `<span class="dim">[browser]</span> active tab changed by screen-071`,
+        `<span class="dim">[cache]</span> reading old-site manifest: /archive/road7/week-zero`,
+        `<span class="bad">[warning]</span> address bar text does not match current document`,
+        `<span class="dim">[screen]</span> 礼堂东北侧 / 经管楼前 / 图书馆南侧 / 生资楼东侧`,
+        `<span class="bad">[decode]</span> 鍑€灞忚鍒? accepted as 净屏计划`,
+        `<span class="dim">[session]</span> ldz_2024_nljg remains attached`,
+        reason === "route"
+          ? `<span class="bad">[gps]</span> reverse route is newer than departure route`
+          : `<span class="bad">[form]</span> submitted value was written to the wrong table`,
+        `<span class="dim">[recovery]</span> click restore after log capture completes`
+      ];
+      fakeAddress.textContent = `screen-071://bua/archive/${reason}/${Date.now().toString(36)}`;
+      takeoverLog.innerHTML = "";
+      takeover.classList.add("show");
+      takeover.setAttribute("aria-hidden", "false");
+      let i = 0;
+      const timer = setInterval(() => {
+        takeoverLog.insertAdjacentHTML("beforeend", `<div>${rows[i] || rows[rows.length - 1]}</div>`);
+        i += 1;
+        if (i >= rows.length) clearInterval(timer);
+      }, 170);
+      playNoise();
     }
 
     function updateLocks(currentDoc = "notice") {
@@ -1321,6 +1429,10 @@
       popup.classList.remove("show");
       popup.setAttribute("aria-hidden", "true");
     });
+    document.getElementById("takeoverClose").addEventListener("click", () => {
+      takeover.classList.remove("show");
+      takeover.setAttribute("aria-hidden", "true");
+    });
     menu.addEventListener("click", event => {
       const button = event.target.closest("button[data-doc]");
       if (button) setDoc(button.dataset.doc);
@@ -1397,6 +1509,7 @@
         } else if (hint) {
           hint.textContent = "投放名称未匹配。请检查口播稿中的加粗字。";
           showPopup("屏幕组 071", "绱犳潗瀹℃牳鏈€氳繃。<br>粗体字段没有被完整读取。", 4400);
+          showTakeover("advert");
         }
       }
       if (action === "submitRegistry") {
@@ -1417,7 +1530,8 @@
         counter.textContent = "gps:00";
         archiveDoc.insertAdjacentHTML("beforeend", `<div class="logbox">[gps] 北农路7号 connected<br>[gps] 礼堂东北侧 connected<br>[gps] 经管楼前 connected<br>[gps] 图书馆南侧 connected<br>[gps] 生资楼东侧 connected<br>[gps] reviewer is behind the current route</div>`);
         showPopup("位置服务", "正在读取校园实景缓存。<br>gps://road7/23:57/return", 2600);
-        setTimeout(() => triggerJumpscare("street"), 1200);
+        setTimeout(() => showTakeover("route"), 650);
+        setTimeout(() => triggerJumpscare("street"), 1900);
       }
       if (action === "submitRoute") {
         const input = document.getElementById("routeCode");
@@ -1469,6 +1583,7 @@
           wrongZeroCode += 1;
           if (hint) hint.textContent = wrongZeroCode >= 2 ? "组合字段未通过：旧站字段与实景字段未同时出现。" : "字段未通过。";
           showPopup("第零年", wrongZeroCode >= 3 ? "棰勮妗ｆ姝ｅ湪鎵撳紑..." : "旧站字段 + 返回路线字段。", 4600);
+          if (wrongZeroCode >= 3) showTakeover("zero");
           if (wrongZeroCode >= 4) triggerJumpscare("zero");
         }
       }
